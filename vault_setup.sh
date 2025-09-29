@@ -1,8 +1,8 @@
 #!/bin/bash
-direc="~/secure_vault"
-file_1="~/secure_vault/keys.txt"
-file_2="~/secure_vault/secrates.txt"
-file_3="~/secure_vault/logs.txt"
+direc="$HOME/secure_vault"
+file_1="$HOME/secure_vault/keys.txt"
+file_2="$HOME/secure_vault/secrates.txt"
+file_3="$HOME/secure_vault/logs.txt"
 
 
 mkdir -p "$direc"
