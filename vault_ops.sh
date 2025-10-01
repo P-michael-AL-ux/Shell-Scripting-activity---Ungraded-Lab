@@ -13,31 +13,31 @@ do
     echo -e "3. Add Log Entry"
     echo -e "4. Access Keys"
     echo -e "5. Exit"
-    read -p "Enter Selection: " usrMenuSelect 
+    read -p "Enter Selection: " usrmenu 
 
-    case $usrMenuSelect in
+    case $usrmenu in
         1)
-            read -p "What's the secret: " newSecret
-            if grep -Fxq "$newSecret" secure_vault/secrets.txt; then
-                echo "Secret already exists!"
+            read -p "What's the secret: " newsecret
+            if grep -Fxq "$newsecret" secure_vault/secrets.txt; then
+                echo "Secret already exists,try another one"
             else
                 echo "$newSecret" >> secure_vault/secrets.txt
-                echo "Secret added."
+                echo "Secret added sucessfully."
             fi
             ;;
         2)
             read -p "What secret do you wish to replace: " usr_1
             if grep -Fxq "$usr_1" secure_vault/secrets.txt ; then
-                read -p "What do you want to change it to: " updatedSecret
-                sed -i "s|$usr_1|$updatedSecret|" secure_vault/secrets.txt
-                echo "Secret changed."
+                read -p "What do you want to change it to: " updateds
+                sed -i "s|$usr_1|$updateds|" secure_vault/secrets.txt
+                echo "Secret changed sucessfully."
             else
                 echo "No match found."
             fi
             ;;
         3)
-            read -p "Enter log: " usrEntry
-            echo -e "$usrEntry \nWritten on: $(date)" >> secure_vault/logs.txt
+            read -p "Enter log: " usrinput
+            printf "$usrinput \nWritten on: $(date)" >> secure_vault/logs.txt
             echo "Log updated! Current logs:"
             cat secure_vault/logs.txt
             ;;
