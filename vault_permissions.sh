@@ -1,43 +1,50 @@
 #!/bin/bash
-# Check if directory exists
-if [[ ! -d "$HOME/secure_vault" ]]; then
-    echo "Error: Directory does not exist"
-    exit 1
-fi
+#Create a if loop, if secure_vault exists to displays exists and otherwise displays error.
+ if [ -d ~/secure_vault ]; then
 
-cd "$HOME/secure_vault" || exit 1
+    echo -e "\nTHE DIRECTORY secure_vault EXISTS.\n";
+  else
+    echo -e " ERROR "
+    exit 1;
 
-# Display current permissions
-ls -l
+  fi
+  cd ~/secure_vault
+#Update the permissions for keys.txt, secrets.txt, logs.txt.
+update_permissions () {
+   local file="$1"
+   local default_permi="$2"
 
-update_permission() {
-    file_name=$1
-    default_perm=$2
+   echo -e "Current permissions of $file : \n$(ls -l "$file")"
 
-    echo ""
-    echo "Processing file: $file_name (default: $default_perm)"
+   read -p "Do want to update the permission $file ? (y/n):" question
 
-    if [[ ! -f $file_name ]]; then
-        echo "Warning: $file_name does not exist"
-        return
-    fi
+   if [[ "$question" == "Y" ]] || [[ "$question" == "y" ]]; then
 
-    read -p "Do you want to update the permission for $file_name? (yes/no) " choice
+     read -p "Enter new permission e.g 600: " permi 
 
-    if [[ $choice =~ ^(yes|Yes|YES)$ ]]; then
-        read -p "Enter the new permission (e.g. 600, 644): " new_perm
-        chmod "$new_perm" "$file_name"
-        echo "Updated $file_name to permission $new_perm"
-    elif [[ -z $choice ]]; then
-        chmod $default_perm "$file_name"
-        echo "No input given, reverted $file_name to default permission $default_perm"
-    else
-        ls -l "$file_name"
-        echo "Input was 'no': $file_name permissions remain unchanged"
-    fi
-}
+     chmod "$permi" "$file"
 
-# Apply to each file
-update_permission key.txt 600
-update_permission secrets.txt 640
-update_permission logs.txt 644
+     echo -e "\nPermission updated to $permi\n"
+   elif [ -z $question ]; then
+     permi=[$permi:-$default_permi]
+     echo -e "\n The permissions haven't changed  \n"
+
+   else
+
+     echo -e "\nPermission left unchanged\n"
+
+  fi
+ }
+    
+
+
+
+update_permissions "keys.txt" "644"
+update_permissions "secrets.txt" "644"
+update_permissions "logs.txt"  "644"
+
+   cd ~/secure_vault
+   echo -e "\nFinal permissions for all files:\n" 
+    for file in keys.txt secrets.txt logs.txt; do
+      ls -l "$file"
+    done
